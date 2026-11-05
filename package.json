@@ -1,0 +1,23 @@
+{
+  "name": "ai-lora-mesh-network",
+  "version": "1.0.0",
+  "description": "AI-Powered LoRa Mesh Network - Mine Rescue & Safety Monitoring System",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev:server": "node server/server.js",
+    "dev:client": "cd client && npm run dev",
+    "build": "cd client && npm install && npm run build",
+    "test:api": "node test_api.js"
+  },
+  "keywords": [
+    "mine-safety",
+    "mine-rescue",
+    "lora-telemetry",
+    "gas-prediction",
+    "ultrasonic-clearance"
+  ],
+  "author": "Antigravity Engineering",
+  "license": "MIT"
+}
+

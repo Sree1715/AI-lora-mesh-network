@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-heading: 'Chakra Petch', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-sans: 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #080c14;
+    color: #e2e8f0;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, .font-industrial {
+    font-family: var(--font-heading);
+    letter-spacing: 0.05em;
+  }
+
+  .font-telemetry {
+    font-family: var(--font-mono);
+  }
+}
+
+/* Custom scrollbar for rugged telemetry panels */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d131f;
+}
+::-webkit-scrollbar-thumb {
+  background: #253349;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
+}
+
+/* Pulsing Alarm Glow */
+@keyframes alarm-pulse-red {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4), inset 0 0 15px rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.9);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(239, 68, 68, 0.8), inset 0 0 25px rgba(239, 68, 68, 0.4);
+    border-color: rgba(254, 202, 202, 1);
+  }
+}
+
+@keyframes alarm-pulse-amber {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+    border-color: rgba(245, 158, 11, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(245, 158, 11, 0.6);
+    border-color: rgba(253, 230, 138, 0.9);
+  }
+}
+
+@keyframes radar-sweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-alarm-red {
+  animation: alarm-pulse-red 1.2s infinite ease-in-out;
+}
+
+.animate-alarm-amber {
+  animation: alarm-pulse-amber 1.8s infinite ease-in-out;
+}
+
+.animate-sweep {
+  animation: radar-sweep 4s linear infinite;
+}
+
+/* Industrial Grid Background */
+.bg-grid-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Carbon & Diamond Plate Accents */
+.carbon-panel {
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(13, 19, 31, 0.98) 100%);
+  border: 1px solid rgba(51, 65, 85, 0.5);
+  backdrop-filter: blur(8px);
+}
