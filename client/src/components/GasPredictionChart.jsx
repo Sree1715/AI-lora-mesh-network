@@ -28,6 +28,8 @@ export default function GasPredictionChart({ history, predictions, currentTeleme
         ch4_lel: item.ch4_lel_percent,
         co: item.co_ppm,
         o2: item.o2_percent,
+        so2: item.so2_ppm || 0,
+        co2: item.co2_ppm || 400,
         isForecast: false
       }));
 
@@ -68,6 +70,8 @@ export default function GasPredictionChart({ history, predictions, currentTeleme
     if (selectedGas === 'CH4') return predictions?.ch4;
     if (selectedGas === 'CO') return predictions?.co;
     if (selectedGas === 'O2') return predictions?.o2;
+    if (selectedGas === 'SO2') return predictions?.so2 || { currentValue: 0, ratePerMin: 0, predictedValue10m: 0, hazardLevel: 'NORMAL', r2Score: 0.94, projectedPoints: [] };
+    if (selectedGas === 'CO2') return predictions?.co2 || { currentValue: 0, ratePerMin: 0, predictedValue10m: 0, hazardLevel: 'NORMAL', r2Score: 0.94, projectedPoints: [] };
     return predictions?.ch4;
   }, [predictions, selectedGas]);
 
@@ -95,9 +99,11 @@ export default function GasPredictionChart({ history, predictions, currentTeleme
           {/* Gas Selector Buttons */}
           <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 p-0.5 rounded-lg text-xs font-mono">
             {[
-              { id: 'CH4', label: 'CH4 (Methane)', color: 'text-amber-400' },
-              { id: 'CO', label: 'CO (Monoxide)', color: 'text-rose-400' },
-              { id: 'O2', label: 'O2 (Oxygen)', color: 'text-teal-400' },
+              { id: 'CH4', label: 'CH₄ Methane', color: 'text-amber-400' },
+              { id: 'CO', label: 'CO Monoxide', color: 'text-rose-400' },
+              { id: 'SO2', label: 'SO₂ Sulphur', color: 'text-orange-400' },
+              { id: 'CO2', label: 'CO₂ Carbon', color: 'text-purple-400' },
+              { id: 'O2', label: 'O₂ Oxygen', color: 'text-teal-400' },
               { id: 'ALL', label: 'All Gases', color: 'text-cyan-400' }
             ].map(gas => (
               <button
@@ -421,6 +427,12 @@ export default function GasPredictionChart({ history, predictions, currentTeleme
                 dot={{ r: 3, fill: '#5eead4' }}
                 isAnimationActive={false}
               />
+            )}
+            {(selectedGas === 'SO2' || selectedGas === 'ALL') && (
+              <Line type="monotone" dataKey="so2" name="SO₂ Real-time" stroke="#fb923c" strokeWidth={2} dot={false} isAnimationActive={false} />
+            )}
+            {(selectedGas === 'CO2' || selectedGas === 'ALL') && (
+              <Line type="monotone" dataKey="co2" name="CO₂ Real-time" stroke="#a855f7" strokeWidth={2} dot={false} isAnimationActive={false} />
             )}
           </LineChart>
         </ResponsiveContainer>

@@ -4,18 +4,14 @@ import TelemetryGrid from './components/TelemetryGrid';
 import VisualGauges from './components/VisualGauges';
 import ClearanceChart from './components/ClearanceChart';
 import GasPredictionChart from './components/GasPredictionChart';
-import LoRaNetworkStatus from './components/LoRaNetworkStatus';
 import SectorPersonnelTracking from './components/SectorPersonnelTracking';
 import SubsurfaceMap from './components/SubsurfaceMap';
 import AlertLog from './components/AlertLog';
 import EmergencySOSModal from './components/EmergencySOSModal';
-import HardwareSimulatorPanel from './components/HardwareSimulatorPanel';
+import CaveDisaster3D from './components/CaveDisaster3D';
 import { useLoRaWebSocket } from './hooks/useLoRaWebSocket';
 import { soundEngine } from './utils/audioAlarm';
-import { 
-  AlertTriangle, ShieldCheck, Activity, Bell, 
-  Radio, HardHat, Compass, Cpu, Volume2, VolumeX, PlayCircle 
-} from 'lucide-react';
+import { AlertTriangle, ShieldCheck, Activity, Bell, HardHat, Eye } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -55,7 +51,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#080c14] text-slate-100 flex flex-col font-sans bg-grid-pattern selection:bg-amber-500 selection:text-black">
-      {/* Top Navigation Bar */}
       <Navbar
         connectionStatus={connectionStatus}
         nodes={nodes}
@@ -70,7 +65,6 @@ export default function App() {
         setActiveTab={setActiveTab}
       />
 
-      {/* Critical Hazard Alert Ticker (if any active critical alerts) */}
       {criticalAlerts.length > 0 && !evacuation.is_active && (
         <div className="bg-red-950/80 border-b border-red-500/80 px-4 py-2 flex items-center justify-between text-xs font-mono text-red-200">
           <div className="flex items-center gap-2 overflow-hidden">
@@ -89,24 +83,18 @@ export default function App() {
         </div>
       )}
 
-      {/* Main Control Station Content Area */}
       <main className="flex-1 max-w-[1920px] w-full mx-auto p-3 sm:p-4 md:p-6 space-y-5">
-        
-        {/* TAB 1: LIVE MONITORING COMMAND DASHBOARD */}
+
+        {/* TAB 1: LIVE GAS MONITORING DASHBOARD */}
         {activeTab === 'dashboard' && (
           <div className="space-y-5">
-            {/* Primary Telemetry Grid (Ultrasonic, CH4, CO, O2, Safety Index) */}
             <TelemetryGrid
               telemetry={telemetry}
               predictions={predictions}
               selectedNode={selectedNode}
               onSelectNode={selectNode}
             />
-
-            {/* Visual Danger Zone Radial Gauges */}
             <VisualGauges telemetry={telemetry} />
-
-            {/* Side-by-Side Streaming Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               <ClearanceChart
                 history={history}
@@ -119,8 +107,6 @@ export default function App() {
                 currentTelemetry={telemetry}
               />
             </div>
-
-            {/* Quick Rescue Teams & Active Node Overview strip */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
               <div className="lg:col-span-2">
                 <SubsurfaceMap
@@ -131,7 +117,6 @@ export default function App() {
                   rescueTeams={rescueTeams}
                 />
               </div>
-
               <div>
                 <SectorPersonnelTracking
                   rescueTeams={rescueTeams}
@@ -144,7 +129,7 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 2: PREDICTIVE ANALYTICS & TRENDS */}
+        {/* TAB 2: PREDICTIVE ANALYTICS & GAS TRENDS */}
         {activeTab === 'analytics' && (
           <div className="space-y-5">
             <GasPredictionChart
@@ -152,47 +137,63 @@ export default function App() {
               predictions={predictions}
               currentTelemetry={telemetry}
             />
-
             <ClearanceChart
               history={history}
               currentDistance={telemetry?.distance_cm}
               predictions={predictions}
             />
-
             <VisualGauges telemetry={telemetry} />
           </div>
         )}
 
-        {/* TAB 3: MINE SECTORS & SPATIAL MAP */}
-        {activeTab === 'map' && (
+        {/* TAB 3: 3D CAVE DISASTER MANAGEMENT */}
+        {activeTab === 'cave3d' && (
           <div className="space-y-5">
-            <SubsurfaceMap
-              nodes={nodes}
-              allLatest={allLatest}
-              selectedNodeId={selectedNodeId}
-              onSelectNode={selectNode}
+            <CaveDisaster3D
+              telemetry={telemetry}
+              predictions={predictions}
+              alerts={alerts}
               rescueTeams={rescueTeams}
             />
-
-            <SectorPersonnelTracking
-              rescueTeams={rescueTeams}
-              allLatest={allLatest}
-              nodes={nodes}
-              onSelectNode={selectNode}
-            />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <SubsurfaceMap
+                nodes={nodes}
+                allLatest={allLatest}
+                selectedNodeId={selectedNodeId}
+                onSelectNode={selectNode}
+                rescueTeams={rescueTeams}
+              />
+              <SectorPersonnelTracking
+                rescueTeams={rescueTeams}
+                allLatest={allLatest}
+                nodes={nodes}
+                onSelectNode={selectNode}
+              />
+            </div>
           </div>
         )}
 
-        {/* TAB 4: LoRa WIRELESS NETWORK MESH */}
-        {activeTab === 'lora' && (
+        {/* TAB 4: GAS SENSING — CO, Methane, SO2, CO2 */}
+        {activeTab === 'gassensing' && (
           <div className="space-y-5">
-            <LoRaNetworkStatus
-              gatewayStats={gatewayStats}
-              nodes={nodes}
-              allLatest={allLatest}
-              selectedNodeId={selectedNodeId}
-              onSelectNode={selectNode}
+            <div className="carbon-panel rounded-xl p-4 border border-slate-800">
+              <h2 className="font-industrial text-sm font-bold text-slate-100 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                Multi-Gas Environmental Monitoring — CO, CH₄, SO₂, CO₂
+              </h2>
+              <TelemetryGrid
+                telemetry={telemetry}
+                predictions={predictions}
+                selectedNode={selectedNode}
+                onSelectNode={selectNode}
+              />
+            </div>
+            <GasPredictionChart
+              history={history}
+              predictions={predictions}
+              currentTelemetry={telemetry}
             />
+            <VisualGauges telemetry={telemetry} />
           </div>
         )}
 
@@ -206,23 +207,8 @@ export default function App() {
             />
           </div>
         )}
-
-        {/* TAB 6: HARDWARE GATEWAY & SIMULATOR */}
-        {activeTab === 'hardware' && (
-          <div className="space-y-5">
-            <HardwareSimulatorPanel
-              simulatorScenario={simulatorScenario}
-              isSimulatorRunning={isSimulatorRunning}
-              onToggleSimulator={toggleSimulator}
-              onSetScenario={setScenario}
-              onOverrideSensor={overrideSensor}
-              selectedNodeId={selectedNodeId}
-            />
-          </div>
-        )}
       </main>
 
-      {/* Emergency SOS Evacuation Modal */}
       <EmergencySOSModal
         isOpen={isSOSOpen}
         onClose={() => setIsSOSOpen(false)}
@@ -232,20 +218,18 @@ export default function App() {
         nodes={nodes}
       />
 
-      {/* Rugged Control Station Footer */}
       <footer className="bg-[#070b13] border-t border-slate-800/80 px-4 py-2 text-[11px] font-mono text-slate-500">
         <div className="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5 text-slate-400">
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-              SURFACE CONTROL LINK: 100% OPERATIONAL
+              GAS MONITORING: ONLINE
             </span>
             <span>•</span>
             <span>OSHA / MSHA TITLE 30 COMPLIANT</span>
           </div>
-
           <div className="flex items-center gap-4">
-            <span>LoRa 915MHz US Band</span>
+            <span>CO • CH₄ • SO₂ • CO₂ • O₂ Sensing</span>
             <span>•</span>
             <span>Prediction Engine: Linear & Polynomial Diffusion</span>
             <span>•</span>

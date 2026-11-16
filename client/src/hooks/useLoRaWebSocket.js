@@ -198,6 +198,8 @@ export function useLoRaWebSocket() {
     ch4_ppm: 680,
     co_ppm: 8.2,
     o2_percent: 20.88,
+    so2_ppm: 1.8,
+    co2_ppm: 415,
     rssi: -79,
     battery: 94,
     progress: 0,
@@ -266,6 +268,9 @@ export function useLoRaWebSocket() {
       s.rssi = Math.max(-90, Math.min(-72, s.rssi + Math.round((Math.random() - 0.5) * 1.5)));
     }
 
+    s.so2_ppm = Math.max(0, Math.min(50, s.so2_ppm + (Math.random() - 0.5) * 0.3));
+    s.co2_ppm = Math.max(300, Math.min(5000, s.co2_ppm + (Math.random() - 0.5) * 15));
+
     const pkt = {
       node_id: selectedNodeIdRef.current || 'NODE-01',
       timestamp: nowIso,
@@ -274,6 +279,8 @@ export function useLoRaWebSocket() {
       ch4_lel_percent: Number(((s.ch4_ppm / 50000) * 100).toFixed(2)),
       co_ppm: Number(s.co_ppm.toFixed(1)),
       o2_percent: Number(s.o2_percent.toFixed(2)),
+      so2_ppm: Number(s.so2_ppm.toFixed(1)),
+      co2_ppm: Number(s.co2_ppm.toFixed(0)),
       rssi: s.rssi,
       snr: 8.5,
       battery: s.battery,

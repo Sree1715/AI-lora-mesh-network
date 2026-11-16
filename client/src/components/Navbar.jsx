@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   ShieldAlert, Radio, Volume2, VolumeX, AlertTriangle, 
   Activity, Clock, Layers, HardHat, Settings, Bell,
-  BarChart3, MapPin, Cpu, CheckCircle2
+  BarChart3, MapPin, Wind, CheckCircle2
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -38,10 +38,9 @@ export default function Navbar({
   const navItems = [
     { id: 'dashboard', label: 'Live Telemetry', icon: Activity },
     { id: 'analytics', label: 'Predictions & Trends', icon: BarChart3 },
-    { id: 'map', label: 'Mine Sectors & Map', icon: MapPin },
-    { id: 'lora', label: 'LoRa Network Mesh', icon: Radio },
+    { id: 'cave3d', label: '3D Cave Disaster', icon: Layers },
+    { id: 'gassensing', label: 'Gas Sensing', icon: Wind },
     { id: 'alerts', label: 'Incident Protocol', icon: Bell, badge: activeAlertsCount },
-    { id: 'hardware', label: 'Gateway & Simulator', icon: Cpu }
   ];
 
   return (
